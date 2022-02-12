@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import propTypes from 'prop-types';
 import { nanoid } from 'nanoid';
-// import s from './ContactForm.module.css';
+import s from './ContactForm.module.css';
 
 class ContactForm extends Component {
     state = {
@@ -27,9 +27,11 @@ class ContactForm extends Component {
 
     render() {
         return (
-            <form onSubmit={this.hendleSubmit}>
-                <label>Name
+            <form onSubmit={this.hendleSubmit} className={s.formWrap}>
+                <div className={s.inputWrap}>
+                    <label className={s.label}>Name</label>
                     <input
+                        className={s.input}
                         value={this.state.name}
                         onChange={this.hendleChange}
                         type="text"
@@ -37,11 +39,12 @@ class ContactForm extends Component {
                         pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
                         title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
                         required
-                    />
-                    
-                </label>
-                <label>Number
+                    />  
+                </div>
+                <div className={s.inputWrap}>
+                    <label className={s.label}>Number</label>
                     <input
+                        className={s.input}
                         value={this.state.number}
                         onChange={this.hendleChange}
                         type="tel"
@@ -50,9 +53,8 @@ class ContactForm extends Component {
                         title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
                         required
                     />
-                    
-                </label>
-                <button type='submit'>
+                </div>   
+                <button className={s.button} type='submit'>
                     Add contact
                 </button>
             </form>

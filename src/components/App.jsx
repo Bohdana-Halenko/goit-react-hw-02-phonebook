@@ -1,8 +1,9 @@
-// import s from './App.module.css';
+import s from './App.module.css';
 import React, { Component } from 'react';
-import ContactList from './ContactList/ContactList';
-import Filter from './Filter/Filter';
 import ContactForm from './ContactForm/ContactForm';
+import Filter from './Filter/Filter';
+import ContactList from './ContactList/ContactList';
+
 
 class App extends Component { 
   state = {
@@ -16,20 +17,51 @@ class App extends Component {
   };
 
   addContacts = data => { 
-    console.log(data)
+    const { contacts } = this.state;
+    const names = contacts.map(contact => contact.name.toLowerCase());
+
+    //Запрет добавлять контакты, имена которых уже есть в телефонной книге
+    names.includes(data.name.toLowerCase())
+      ? alert(`${data.name} is already in contact`)
+      : this.setState(prevState => ({
+          contacts: [data, ...prevState.contacts],
+      }))
+  };
+
+  deleteContact = contactId => {
+    this.setState(prevState => ({
+      contacts: prevState.contacts.filter(contact => contact.id !== contactId),
+    }));
+  };
+
+  changeFilter = e => {
+    this.setState({ filter: e.currentTarget.value });
+  };
+
+  getVisibleContact = () => {
+    const { filter, contacts } = this.state;
+    const normalizeFilter = filter.toLowerCase();
+
+    return contacts.filter(contact =>
+      contact.name.toLowerCase().includes(normalizeFilter),
+    );
   };
   
   render() {
+    const { filter } = this.state;
+    const visibleContact = this.getVisibleContact();
+
     return (
       <>
-        <h1>Phonebook</h1>
-        <ContactForm onSubmit={this.addContacts}/>
-
-        <h2>Contacts</h2>
-        <Filter />
-        <ContactList />
+          <div className={s.container}>
+            <h1 className={s.title}>Phonebook</h1>
+            <ContactForm onSubmit={this.addContacts} />
+            <h2 className={s.title}>Contacts</h2>
+            <Filter value={filter} onChange={this.changeFilter} />
+            <ContactList contacts={visibleContact} onDeleteContact={this.deleteContact} />
+          </div>
       </>
-    )
+    );
   }
 }
 
